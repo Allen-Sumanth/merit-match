@@ -1,5 +1,5 @@
 package com.example.meritmatch.backend
 
-data class AccCheck(
+data class AccCheckResponse(
     val exists: String
 )

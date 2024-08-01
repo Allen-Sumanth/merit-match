@@ -30,7 +30,7 @@ object AppModule {
     @Provides
     @Singleton
     fun meritMatchApi(okHttpClient: OkHttpClient): MeritMarchApi = Retrofit.Builder()
-        .baseUrl("http://127.0.0.1:8000")
+        .baseUrl("http://localhost:8000")
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()

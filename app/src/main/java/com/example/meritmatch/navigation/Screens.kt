@@ -8,4 +8,5 @@ sealed class Screens(val route: String) {
     data object AccountPage: Screens(route = "AccountPage")
     data object TaskPage: Screens(route = "TaskPage")
     data object NewTaskPage: Screens(route = "NewTaskPage")
+    data object SettingsPage: Screens(route = "SettingsPage")
 }

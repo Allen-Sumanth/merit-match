@@ -7,81 +7,89 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.meritmatch.MainViewModel
+import com.example.meritmatch.backend.NewTaskBase
 import com.example.meritmatch.ui.theme.CardColor
 import com.example.meritmatch.ui.theme.HomeScreenColor
-import com.example.meritmatch.ui.theme.NavBarColor
 import com.example.meritmatch.ui.theme.SubmitButtonColor
 import com.example.meritmatch.ui.theme.archivoRegular
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
+    var taskTitle by remember {
+        mutableStateOf("")
+    }
+    var karma by remember {
+        mutableStateOf("")
+    }
+    var taskDesc by remember {
+        mutableStateOf("")
+    }
+
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         bottomBar = {
-            BottomNavigationBar(viewModel = viewModel)
+            BottomNavigationBar(navController = navController, viewModel = viewModel,)
         },
         containerColor = HomeScreenColor
     ) { it ->
         Column(
             modifier = Modifier
                 .padding(it)
+                .verticalScroll(rememberScrollState())
                 .then(Modifier.padding(top = 30.dp, start = 20.dp, end = 20.dp)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-//            Text(
-//                text = "New Task",
-//                color = Color.White,
-//                fontSize = 45.sp,
-//                fontFamily = archivoRegular
-//            )
-//            HorizontalDivider(
-//                modifier = Modifier
-//                    .padding(top = 10.dp, bottom = 10.dp)
-//                    .fillMaxWidth(),
-//                thickness = 2.dp
-//            )
-            var title = ""
+            //char limit
+            val charLimit = 999
+            val focusManager = LocalFocusManager.current
+            //task title
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp),
-                value = title,
+                value = taskTitle,
                 onValueChange = {
-                    title = it
+                    taskTitle = it
                 },
                 singleLine = true,
                 colors = TextFieldDefaults.colors(
@@ -91,6 +99,7 @@ fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
                     focusedIndicatorColor = Color.White,
                     unfocusedTextColor = Color.LightGray,
                     focusedTextColor = Color.LightGray,
+                    focusedSupportingTextColor = Color.LightGray
                 ),
                 placeholder = {
                     Text(
@@ -103,8 +112,10 @@ fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
                     )
                 },
                 maxLines = 1,
+                textStyle = TextStyle.Default.copy(fontSize = 30.sp),
             )
 
+            //karma points
             Row {
                 Column(
                     horizontalAlignment = Alignment.End,
@@ -117,7 +128,7 @@ fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
                         fontSize = 30.sp
                     )
                     Text(
-                        text = "Available: 550",
+                        text = "Available: ${viewModel.karma}",
                         fontFamily = archivoRegular,
                         color = Color.Gray,
                         fontSize = 15.sp,
@@ -127,12 +138,12 @@ fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
 
                 Spacer(modifier = Modifier.width(40.dp))
 
-                // TODO: add proper values
-                var karma = ""
                 TextField(
                     value = karma,
                     onValueChange = {
-                        karma = it
+                        if (it.isDigitsOnly()) {
+                            karma = it
+                        }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
@@ -147,6 +158,7 @@ fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
                 )
             }
 
+            //task description
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -171,12 +183,13 @@ fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
                     )
                 }
             }
-
-            var description = ""
             TextField(
-                value = description,
+                value = taskDesc,
                 onValueChange = {
-                    description = it
+                    taskDesc = it.take(charLimit)
+                    if (it.length > charLimit) {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 20,
@@ -189,11 +202,45 @@ fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
                     focusedIndicatorColor = Color.Transparent,
                     focusedTextColor = Color.White,
                     unfocusedTextColor = Color.White
-                )
+                ),
+                supportingText = {
+                    Text(text = "${taskDesc.length} / 1000", textAlign = TextAlign.End)
+                }
             )
 
+            //submit button
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    if (viewModel.karma < karma.toInt()){
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "insufficient karma points",
+                                withDismissAction = true
+                            )
+                        }
+                    }
+                    else if (taskTitle.isNotBlank() && karma.isNotBlank() && taskDesc.isNotBlank()) {
+                        val time = Calendar.getInstance().time
+                        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        val currentDate = formatter.format(time)
+                        val newTask =  NewTaskBase(
+                            assign_date = currentDate,
+                            karma = karma.toInt(),
+                            task_desc = taskDesc,
+                            task_status = "NEW",
+                            task_title = taskTitle,
+                            username = viewModel.currentUser
+                        )
+                        viewModel.addNewTask(newTask)
+                        navController.navigateUp()
+                    } else {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "please fill out all fields",
+                            )
+                        }
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = SubmitButtonColor
                 ),
@@ -206,12 +253,8 @@ fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
                     fontSize = 30.sp
                 )
             }
+            
+            Spacer(modifier = Modifier.height(500.dp))
         }
     }
-}
-
-@Preview
-@Composable
-private fun NewTaskPreview() {
-    NewTaskPage(navController = rememberNavController(), viewModel = MainViewModel())
 }

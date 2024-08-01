@@ -17,11 +17,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.meritmatch.MainViewModel
+import com.example.meritmatch.navigation.Screens
 import com.example.meritmatch.ui.theme.NavBarColor
 
 @Composable
-fun BottomNavigationBar(viewModel: MainViewModel) {
+fun BottomNavigationBar(viewModel: MainViewModel, navController: NavController) {
     NavigationBar(
         containerColor = NavBarColor,
         contentColor = Color.White
@@ -31,6 +33,7 @@ fun BottomNavigationBar(viewModel: MainViewModel) {
             selected = viewModel.selectedNavBarIndex == 0,
             onClick = {
                 viewModel.selectedNavBarIndex = 0
+                navController.navigate(Screens.AccountPage.route)
             },
             icon = {
                 if (viewModel.selectedNavBarIndex == 0) {
@@ -64,7 +67,10 @@ fun BottomNavigationBar(viewModel: MainViewModel) {
         //home
         NavigationBarItem(
             selected = viewModel.selectedNavBarIndex == 1,
-            onClick = { viewModel.selectedNavBarIndex = 1 },
+            onClick = {
+                viewModel.selectedNavBarIndex = 1
+                navController.navigate(Screens.HomePage.route)
+            },
             icon = {
                 if (viewModel.selectedNavBarIndex == 1) {
                     Icon(
@@ -97,7 +103,10 @@ fun BottomNavigationBar(viewModel: MainViewModel) {
         //Settings
         NavigationBarItem(
             selected = viewModel.selectedNavBarIndex == 2,
-            onClick = { viewModel.selectedNavBarIndex = 2 },
+            onClick = {
+                viewModel.selectedNavBarIndex = 2
+                navController.navigate(Screens.SettingsPage.route)
+            },
             icon = {
                 if (viewModel.selectedNavBarIndex == 2) {
                     Icon(
