@@ -52,6 +52,7 @@ fun TaskPage(
     taskId: Int
 ) {
     BackHandler {//handles back button press
+        viewModel.selectedNavBarIndex = 1
         navController.navigate(Screens.HomePage.route) {
             popUpTo(Screens.HomePage.route){
                 inclusive = true

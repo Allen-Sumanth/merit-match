@@ -36,6 +36,7 @@ import com.example.meritmatch.ui.theme.archivoRegular
 @Composable
 fun SettingsPage(navController: NavController, viewModel: MainViewModel) {
     BackHandler {//handles back button press
+        viewModel.selectedNavBarIndex = 1
         navController.navigate(Screens.HomePage.route) {
             popUpTo(Screens.HomePage.route){
                 inclusive = true

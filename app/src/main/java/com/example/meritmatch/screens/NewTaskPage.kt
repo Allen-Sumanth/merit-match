@@ -53,6 +53,7 @@ import java.util.Locale
 @Composable
 fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
     BackHandler {//handles back button press
+        viewModel.selectedNavBarIndex = 1
         navController.navigate(Screens.HomePage.route) {
             popUpTo(Screens.HomePage.route){
                 inclusive = true
