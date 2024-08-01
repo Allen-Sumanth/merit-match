@@ -17,10 +17,7 @@ import com.example.meritmatch.backend.TaskBaseItem
 import com.example.meritmatch.backend.UnreserveTaskBase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.internal.concurrent.Task
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

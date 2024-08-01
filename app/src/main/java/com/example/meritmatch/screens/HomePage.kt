@@ -48,7 +48,6 @@ import com.example.meritmatch.ui.theme.archivoRegular
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun HomePage(navController: NavController, viewModel: MainViewModel) {
-    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
