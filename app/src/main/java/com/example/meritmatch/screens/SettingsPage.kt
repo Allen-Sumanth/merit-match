@@ -1,5 +1,6 @@
 package com.example.meritmatch.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,14 @@ import com.example.meritmatch.ui.theme.archivoRegular
 
 @Composable
 fun SettingsPage(navController: NavController, viewModel: MainViewModel) {
+    BackHandler {//handles back button press
+        navController.navigate(Screens.HomePage.route) {
+            popUpTo(Screens.HomePage.route){
+                inclusive = true
+                saveState = true
+            }
+        }
+    }
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),

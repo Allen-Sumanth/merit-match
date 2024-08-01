@@ -1,5 +1,6 @@
 package com.example.meritmatch.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,6 +53,14 @@ import kotlinx.coroutines.runBlocking
 
 @Composable
 fun SignUpPage(navController: NavController, viewModel: MainViewModel) {
+    BackHandler {//handles back button press
+        navController.navigate(Screens.LandingPage.route) {
+            popUpTo(Screens.LandingPage.route){
+                inclusive = true
+                saveState = true
+            }
+        }
+    }
     val snackbarHostState = remember {
         SnackbarHostState()
     }

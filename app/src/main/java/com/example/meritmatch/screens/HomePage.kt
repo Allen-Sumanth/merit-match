@@ -1,6 +1,7 @@
 package com.example.meritmatch.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,7 +48,8 @@ import com.example.meritmatch.ui.theme.archivoRegular
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun HomePage(navController: NavController, viewModel: MainViewModel) {
+fun HomePage(navController: NavController, viewModel: MainViewModel, context: Context) {
+    DoubleBackPressToExit(context)
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),

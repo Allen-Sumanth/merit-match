@@ -1,5 +1,8 @@
 package com.example.meritmatch.screens
 
+import android.content.Context
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +16,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,9 +34,12 @@ import com.example.meritmatch.navigation.Screens
 import com.example.meritmatch.ui.theme.HomeScreenButtonColor
 import com.example.meritmatch.ui.theme.LoginScreenColor
 import com.example.meritmatch.ui.theme.michroma
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
-fun LandingPage(navController: NavController) {
+fun LandingPage(navController: NavController, context: Context) {
+    DoubleBackPressToExit(context)
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.homepagebackground),
@@ -139,8 +148,18 @@ fun LandingPage(navController: NavController) {
     }
 }
 
-@Preview
+
 @Composable
-private fun HomePagePreview() {
-    LandingPage(navController = rememberNavController())
+fun DoubleBackPressToExit(context: Context, enabled: Boolean = true) {
+    val scope = rememberCoroutineScope()
+    val isBackPressed = remember { mutableStateOf(false) }
+
+    BackHandler(enabled && !isBackPressed.value) {
+        isBackPressed.value = true
+        Toast.makeText(context, "Press back again to exit", Toast.LENGTH_SHORT).show()
+        scope.launch {
+            delay(2000L)
+            isBackPressed.value = false
+        }
+    }
 }

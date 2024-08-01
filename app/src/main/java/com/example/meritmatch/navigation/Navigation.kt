@@ -1,5 +1,6 @@
 package com.example.meritmatch.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -18,7 +19,7 @@ import com.example.meritmatch.screens.SignUpPage
 import com.example.meritmatch.screens.TaskPage
 
 @Composable
-fun Navigation() {
+fun Navigation(context: Context) {
     val navController = rememberNavController()
     val viewModel:MainViewModel = viewModel<MainViewModel>()
     
@@ -28,7 +29,7 @@ fun Navigation() {
 
     ) {
         composable(route = Screens.LandingPage.route) {
-            LandingPage(navController = navController)
+            LandingPage(navController = navController, context = context)
         }
         composable(route = Screens.LoginPage.route) {
             LoginPage(navController = navController, viewModel = viewModel)
@@ -37,7 +38,7 @@ fun Navigation() {
             SignUpPage(navController = navController, viewModel = viewModel)
         }
         composable(route = Screens.HomePage.route) {
-            HomePage(navController = navController, viewModel  = viewModel)
+            HomePage(navController = navController, viewModel  = viewModel, context = context)
         }
         composable(route = Screens.AccountPage.route) {
             AccountPage(navController = navController, viewModel = viewModel)

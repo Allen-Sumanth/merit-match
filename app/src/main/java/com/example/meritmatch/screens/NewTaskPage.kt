@@ -1,5 +1,6 @@
 package com.example.meritmatch.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,6 +40,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
 import com.example.meritmatch.MainViewModel
 import com.example.meritmatch.backend.NewTaskBase
+import com.example.meritmatch.navigation.Screens
 import com.example.meritmatch.ui.theme.CardColor
 import com.example.meritmatch.ui.theme.HomeScreenColor
 import com.example.meritmatch.ui.theme.SubmitButtonColor
@@ -50,6 +52,14 @@ import java.util.Locale
 
 @Composable
 fun NewTaskPage(navController: NavController, viewModel: MainViewModel) {
+    BackHandler {//handles back button press
+        navController.navigate(Screens.HomePage.route) {
+            popUpTo(Screens.HomePage.route){
+                inclusive = true
+                saveState = true
+            }
+        }
+    }
     var taskTitle by remember {
         mutableStateOf("")
     }

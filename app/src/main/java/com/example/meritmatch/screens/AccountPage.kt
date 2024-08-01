@@ -1,5 +1,6 @@
 package com.example.meritmatch.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -28,12 +29,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.meritmatch.MainViewModel
 import com.example.meritmatch.R
+import com.example.meritmatch.navigation.Screens
 import com.example.meritmatch.ui.theme.HomeScreenColor
 import com.example.meritmatch.ui.theme.archivoRegular
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AccountPage(navController: NavController, viewModel: MainViewModel) {
+    BackHandler {//handles back button press
+        navController.navigate(Screens.HomePage.route) {
+            popUpTo(Screens.HomePage.route){
+                inclusive = true
+                saveState = true
+            }
+        }
+    }
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),

@@ -1,5 +1,6 @@
 package com.example.meritmatch.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.meritmatch.MainViewModel
 import com.example.meritmatch.R
+import com.example.meritmatch.navigation.Screens
 import com.example.meritmatch.ui.theme.CardColor
 import com.example.meritmatch.ui.theme.HomeScreenColor
 import com.example.meritmatch.ui.theme.archivoRegular
@@ -49,6 +51,14 @@ fun TaskPage(
     taskStatus: String,
     taskId: Int
 ) {
+    BackHandler {//handles back button press
+        navController.navigate(Screens.HomePage.route) {
+            popUpTo(Screens.HomePage.route){
+                inclusive = true
+                saveState = true
+            }
+        }
+    }
     var taskStatusTracker by remember {
         mutableStateOf(taskStatus)
     }

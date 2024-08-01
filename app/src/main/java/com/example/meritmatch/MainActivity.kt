@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val context = this
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    Navigation()
+                    Navigation(context = context)
                 }
             }
         }
